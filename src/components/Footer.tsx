@@ -12,6 +12,7 @@ import {
   BookOpen,
 } from 'lucide-react';
 import { TraceriLogo } from './TraceriLogo';
+import { APP_INFO, DEVELOPER_INFO } from '../data/common';
 
 export const Footer: React.FC = () => {
   const { archive } = useArchive();
@@ -50,27 +51,26 @@ export const Footer: React.FC = () => {
               <Link to="/" className="group flex items-center space-x-2.5">
                 <TraceriLogo className="w-8 h-8 group-hover:scale-105 transition-transform shadow-sm" />
                 <span className="font-editorial text-2xl sm:text-3xl tracking-[0.2em] font-semibold text-[#FAF8F5] group-hover:text-[#CFA04E] transition-colors">
-                  TRACERI
+                  {APP_INFO.name}
                 </span>
               </Link>
               <span className="font-mono text-[9px] tracking-widest text-[#CFA04E] border border-[#CFA04E]/30 bg-[#CFA04E]/10 px-2 py-0.5 rounded">
-                VOL. 01 · 2026
+                {APP_INFO.volume} · {APP_INFO.year}
               </span>
             </div>
 
             <p className="font-editorial italic text-base text-[#FAF8F5]/90 tracking-wide">
-              Every moment leaves a trace.
+              {APP_INFO.tagline}
             </p>
 
             <p className="font-sans text-xs text-[#8E939E] leading-relaxed max-w-md">
-              An interactive digital life archive, editorial magazine, and empirical data archaeology.
-              Transforming fragmented digital receipts into structured human stories through relational synthesis.
+              {APP_INFO.description}
             </p>
 
             <div className="pt-2 flex flex-wrap items-center gap-2">
               <span className="inline-flex items-center space-x-1.5 px-2.5 py-1 rounded-full bg-[#121620] border border-[#242A36] text-[11px] font-mono text-[#76B896]">
                 <span className="w-1.5 h-1.5 rounded-full bg-[#5F9E7D] animate-pulse" />
-                <span>ENGINE ONLINE</span>
+                <span>{APP_INFO.engineStatus}</span>
               </span>
               <span className="inline-flex items-center space-x-1.5 px-2.5 py-1 rounded-full bg-[#121620] border border-[#242A36] text-[11px] font-mono text-[#FAF8F5]/80">
                 <span>{archive.totalTraces} RECORDED TRACES</span>
@@ -118,34 +118,34 @@ export const Footer: React.FC = () => {
             <div className="space-y-2.5">
               <a
                 id="footer-instagram-link"
-                href="https://www.instagram.com/ankit_628792"
+                href={DEVELOPER_INFO.instagram.url}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center justify-between px-3.5 py-2.5 rounded-xl bg-[#12151D] hover:bg-[#1B202C] border border-[#232730] hover:border-[#CFA04E]/50 text-xs font-mono text-[#FAF8F5] group transition-all"
               >
                 <span className="flex items-center space-x-2.5">
                   <Instagram className="w-4 h-4 text-[#D67C6B] group-hover:scale-110 transition-transform" />
-                  <span className="group-hover:text-[#CFA04E] transition-colors">Instagram</span>
+                  <span className="group-hover:text-[#CFA04E] transition-colors">{DEVELOPER_INFO.instagram.platform}</span>
                 </span>
                 <span className="flex items-center space-x-1 text-[11px] text-[#8E939E] group-hover:text-[#FAF8F5]">
-                  <span>@ankit_628792</span>
+                  <span>{DEVELOPER_INFO.instagram.handle}</span>
                   <ExternalLink className="w-3 h-3 text-[#6B7280] group-hover:text-[#FAF8F5]" />
                 </span>
               </a>
 
               <a
                 id="footer-linkedin-link"
-                href="https://www.linkedin.com/in/ankit628792"
+                href={DEVELOPER_INFO.linkedin.url}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center justify-between px-3.5 py-2.5 rounded-xl bg-[#12151D] hover:bg-[#1B202C] border border-[#232730] hover:border-[#569CA6]/50 text-xs font-mono text-[#FAF8F5] group transition-all"
               >
                 <span className="flex items-center space-x-2.5">
                   <Linkedin className="w-4 h-4 text-[#569CA6] group-hover:scale-110 transition-transform" />
-                  <span className="group-hover:text-[#569CA6] transition-colors">LinkedIn</span>
+                  <span className="group-hover:text-[#569CA6] transition-colors">{DEVELOPER_INFO.linkedin.platform}</span>
                 </span>
                 <span className="flex items-center space-x-1 text-[11px] text-[#8E939E] group-hover:text-[#FAF8F5]">
-                  <span>ankit628792</span>
+                  <span>{DEVELOPER_INFO.linkedin.handle}</span>
                   <ExternalLink className="w-3 h-3 text-[#6B7280] group-hover:text-[#FAF8F5]" />
                 </span>
               </a>
@@ -158,13 +158,13 @@ export const Footer: React.FC = () => {
         <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-mono text-[#8E939E]">
           <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-4 text-center sm:text-left">
             <span className="text-[#FAF8F5] font-semibold">
-              © {currentYear} Traceri.
+              © {currentYear} {APP_INFO.displayName}.
             </span>
             <span className="hidden sm:inline text-[#2A313E]">|</span>
             <span>All rights reserved.</span>
             <span className="hidden sm:inline text-[#2A313E]">|</span>
             <span className="text-[#6B7280]">
-              Empirical Digital Life Archive · Deterministic Engine
+              {APP_INFO.specification}
             </span>
           </div>
 

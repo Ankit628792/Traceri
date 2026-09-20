@@ -13,6 +13,7 @@ import {
 } from 'lucide-react';
 import { TraceriLogo } from './TraceriLogo';
 import { useArchive } from '../context/ArchiveContext';
+import { PRIMARY_NAV_LINKS, SECONDARY_NAV_LINKS, APP_INFO } from '../data/common';
 
 export const Navigation: React.FC = () => {
   const { archive, setShowDatasetModal } = useArchive();
@@ -24,33 +25,20 @@ export const Navigation: React.FC = () => {
   const currentPath = routerState.location.pathname;
 
   // Primary options displayed directly on navbar for tablet & desktop
-  const primaryNavLinks = [
-    { to: '/', label: 'Archive', exact: true },
-    { to: '/threads', label: 'Threads', exact: false },
-    { to: '/story', label: 'Story', exact: false },
-  ];
+  const primaryNavLinks = PRIMARY_NAV_LINKS;
 
   // Secondary options grouped into the menu popover component
-  const secondaryNavLinks = [
-    { 
-      to: '/calendar', 
-      label: 'Calendar', 
-      description: 'Chronological life matrix',
-      icon: Calendar 
-    },
-    { 
-      to: '/atlas', 
-      label: 'Atlas', 
-      description: 'Spatial cartography & coordinates',
-      icon: Compass 
-    },
-    { 
-      to: '/discoveries', 
-      label: 'Discoveries', 
-      description: 'Algorithmic synthesis & deep insights',
-      icon: Sparkles 
-    },
-  ];
+  const secondaryNavLinks = SECONDARY_NAV_LINKS.map((item) => {
+    let icon = Sparkles;
+    if (item.iconName === 'Calendar') icon = Calendar;
+    else if (item.iconName === 'Compass') icon = Compass;
+    return {
+      to: item.to,
+      label: item.label,
+      description: item.description || '',
+      icon,
+    };
+  });
 
   const isSecondaryActive = secondaryNavLinks.some((link) => currentPath.startsWith(link.to));
 

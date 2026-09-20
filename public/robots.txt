@@ -1,0 +1,14 @@
+# Robots.txt for Traceri (Traceva) Digital Life Archive
+# Generated automatically by scripts/generate-seo.js
+# Canonical Base: https://traceri.vercel.app
+
+User-agent: *
+Allow: /
+
+# Disallow transient or internal asset queries if needed
+Disallow: /api/
+Disallow: /draft/
+
+# Sitemaps
+Sitemap: https://traceri.vercel.app/sitemap.xml
+Host: https://traceri.vercel.app

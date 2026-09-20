@@ -3,10 +3,11 @@ import {
   createRootRoute,
   createRoute,
   createRouter,
-  createHashHistory,
+  createBrowserHistory,
   Outlet,
   Navigate,
   useRouterState,
+  useNavigate,
 } from '@tanstack/react-router';
 import { motion, AnimatePresence } from 'motion/react';
 import { Navigation } from './components/Navigation';
@@ -16,6 +17,7 @@ import { ThreadsPage } from './pages/ThreadsPage';
 import { AtlasPage } from './pages/AtlasPage';
 import { DiscoveriesPage } from './pages/DiscoveriesPage';
 import { CalendarPage } from './pages/CalendarPage';
+import { NotFoundPage } from './pages/NotFoundPage';
 import { ReceiptDetail } from './components/ReceiptDetail';
 import { DatasetModal } from './components/DatasetModal';
 import { CustomCursor } from './components/CustomCursor';
@@ -24,6 +26,7 @@ import { ScrollToTop } from './components/ScrollToTop';
 import { Footer } from './components/Footer';
 import { EditorialPageLoader } from './components/EditorialPageLoader';
 import { useArchive } from './context/ArchiveContext';
+import { updateRouteSEO } from './utils/seo';
 
 // Root Layout Component
 const RootLayout: React.FC = () => {
@@ -39,6 +42,7 @@ const RootLayout: React.FC = () => {
 
   const routerState = useRouterState();
   const currentPath = routerState.location.pathname;
+  const navigate = useNavigate();
 
   const [isInitialLoading, setIsInitialLoading] = useState(true);
   const [isRouteLoading, setIsRouteLoading] = useState(false);
@@ -50,6 +54,11 @@ const RootLayout: React.FC = () => {
     }, 1100);
     return () => clearTimeout(timer);
   }, []);
+
+  useEffect(() => {
+    // Dynamically update document title, canonical link, social tags, and JSON-LD
+    updateRouteSEO({ path: currentPath });
+  }, [currentPath]);
 
   useEffect(() => {
     if (prevPathRef.current !== currentPath) {
@@ -119,7 +128,11 @@ const RootLayout: React.FC = () => {
             onSelectReceipt={selectReceipt}
             onFollowThread={(startReceiptId) => {
               const thread = archive.threads.find((t) => t.receiptIds.includes(startReceiptId));
-              window.location.hash = thread ? `#/threads?threadId=${thread.id}` : '#/threads';
+              if (thread) {
+                navigate({ to: '/threads', search: { threadId: thread.id } });
+              } else {
+                navigate({ to: '/threads' });
+              }
               setSelectedReceipt(null);
             }}
           />
@@ -147,6 +160,7 @@ const RootLayout: React.FC = () => {
 // Define Root Route
 const rootRoute = createRootRoute({
   component: RootLayout,
+  notFoundComponent: NotFoundPage,
 });
 
 // Define Child Routes
@@ -198,6 +212,13 @@ const calendarRoute = createRoute({
   component: CalendarPage,
 });
 
+// Catch-all route for unmatched paths
+const notFoundRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '$',
+  component: NotFoundPage,
+});
+
 // Create Route Tree
 const routeTree = rootRoute.addChildren([
   indexRoute,
@@ -208,15 +229,18 @@ const routeTree = rootRoute.addChildren([
   mapRoute,
   discoveriesRoute,
   calendarRoute,
+  notFoundRoute,
 ]);
 
-// Use hash history for guaranteed reliability within container iframes and preview URLs
-export const hashHistory = createHashHistory();
+// Standard browser history for clean, direct path URLs (/threads, /story, /calendar) without hash fragments
+export const browserHistory = createBrowserHistory();
 
 export const router = createRouter({
   routeTree,
-  history: hashHistory,
+  history: browserHistory,
   defaultPreload: 'intent',
+  defaultNotFoundComponent: NotFoundPage,
+  trailingSlash: 'never',
 });
 
 // Register router instance for type safety

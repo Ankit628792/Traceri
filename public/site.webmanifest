@@ -1,0 +1,29 @@
+{
+  "name": "Traceri — An Editorial Visualization of a Life",
+  "short_name": "Traceri",
+  "description": "An interactive digital life archive, editorial magazine, and empirical data archaeology.",
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#0A0B0D",
+  "theme_color": "#0A0B0D",
+  "categories": [
+    "lifestyle",
+    "utilities",
+    "entertainment"
+  ],
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/logo.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}

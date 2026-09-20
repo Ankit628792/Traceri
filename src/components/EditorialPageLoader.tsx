@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { TraceriLogo } from './TraceriLogo';
+import { APP_INFO } from '../data/common';
 
 interface EditorialPageLoaderProps {
   isLoading: boolean;
@@ -9,7 +10,7 @@ interface EditorialPageLoaderProps {
   onComplete?: () => void;
 }
 
-const APP_NAME_LETTERS = ['T', 'R', 'A', 'C', 'E', 'R', 'I'];
+const APP_NAME_LETTERS = APP_INFO.letters;
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -112,7 +113,7 @@ export const EditorialPageLoader: React.FC<EditorialPageLoaderProps> = ({
               variants={subtitleVariants}
               className="mt-3 text-[11px] font-mono uppercase tracking-[0.35em] text-[#CFA04E]"
             >
-              DIGITAL LIFE ARCHIVE
+              {APP_INFO.subtitle}
             </motion.p>
           </div>
         </motion.div>
