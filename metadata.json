@@ -1,0 +1,8 @@
+{
+  "name": "Remix Traceri",
+  "description": "An Editorial Visualization of a Life — An interactive digital archive, editorial magazine, and data art experience.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

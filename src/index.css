@@ -1,0 +1,72 @@
+@import "tailwindcss";
+
+@theme {
+  --font-serif: "Newsreader", Georgia, Cambria, serif;
+  --font-sans: "Plus Jakarta Sans", system-ui, -apple-system, sans-serif;
+  --font-mono: "JetBrains Mono", Menlo, Monaco, monospace;
+
+  --color-trace-bg: #0A0B0D;
+  --color-trace-surface: #13161C;
+  --color-trace-elevated: #1C2028;
+  --color-trace-border: #242934;
+  --color-trace-ivory: #FAF8F5;
+  --color-trace-muted: #8E939E;
+
+  --color-cat-music: #8B78C2;
+  --color-cat-movies: #D25A5A;
+  --color-cat-places: #5F9E7D;
+  --color-cat-purchases: #CFA04E;
+  --color-cat-photos: #5C8EA8;
+  --color-cat-messages: #D67C6B;
+  --color-cat-searches: #569CA6;
+  --color-cat-events: #D9883E;
+  --color-cat-notes: #BFA27E;
+}
+
+@layer base {
+  body {
+    font-family: var(--font-sans);
+    background-color: #0A0B0D;
+    color: #E6E3DC;
+    overflow-x: hidden;
+  }
+
+  h1, h2, h3, .font-editorial {
+    font-family: var(--font-serif);
+  }
+
+  code, pre, .font-mono {
+    font-family: var(--font-mono);
+  }
+}
+
+/* Editorial receipt serrated edge */
+.receipt-tear-bottom {
+  background-image: radial-gradient(circle, transparent, transparent 50%, #15181F 50%, #15181F 100%);
+  background-size: 12px 12px;
+}
+
+/* Subtle archival film grain */
+.bg-archive-grid {
+  background-size: 32px 32px;
+  background-image: 
+    linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+}
+
+/* Custom minimal scrollbar */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+::-webkit-scrollbar-track {
+  background: #0A0B0D;
+}
+::-webkit-scrollbar-thumb {
+  background: #282D38;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #3A4252;
+}
+
