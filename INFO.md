@@ -27,6 +27,11 @@ Lives do not happen in neat corporate quarters or spreadsheets. They unfold in *
 ### Contemplative Pacing
 Rather than overwhelming the senses with rapid notifications and endless feeds, Traceri is deliberately designed to feel like browsing a quiet, high-end print monograph or museum collection. The warm obsidian palette, refined serif headlines, and spacious layouts encourage reflection rather than skimming.
 
+### Dataset Modeling & Empiricism
+Traceri's empirical foundation integrates real-world data structures derived from **Daily Household Transactions** and **spotify_data_dictionary**:
+- **Daily Household Transactions**: Informs granular receipt itemization, merchant classification, financial categorizations, and timestamped purchase distributions.
+- **spotify_data_dictionary**: Informs cultural audio logs, timestamped listening receipts, track/album metadata, and sonic vibe mappings that accompany physical spend memories.
+
 ---
 
 ## 3. Guide to All Routes

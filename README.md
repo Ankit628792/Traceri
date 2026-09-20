@@ -36,6 +36,7 @@ For an in-depth non-technical exploration of the creative vision and each route,
 ## Key Highlights
 
 - **Editorial Aesthetic**: Warm obsidian canvas (`#0A0B0D`), Newsreader serif headings, JetBrains Mono metadata numerals, and warm gold accents (`#CFA04E`).
+- **Integrated Datasets**: Provided **Daily Household Transactions** (itemized receipts, category taxonomies, merchant metadata) and **spotify_data_dictionary** (cultural audio logs, listening timestamps, and emotional vibe mapping).
 - **Interactive 3D Cartography**: Interactive Three.js spatial globe visualizing geographic coordinates and location clusters.
 - **Fluid Layout Transitions**: Motion-driven page changes and layout transitions without jarring page resets.
 - **Client-Side SEO & Manifest**: Dynamic `<meta>`, OpenGraph cards, Twitter cards, and Schema.org JSON-LD structured data synchronized across routes.
@@ -65,6 +66,7 @@ For complete environment configuration, build verification, and deployment instr
 
 ## Documentation
 
+- **[HACKATHON.md](HACKATHON.md)**: WebRush — The 6-Hour Challenge submission overview, problem statement ("Your Life, In Receipts 🧾"), dataset modeling, and evaluation details.
 - **[INFO.md](INFO.md)**: Deep dive into the philosophy, thoughts, and complete non-technical narrative for every route.
 - **[SETUP.md](SETUP.md)**: Comprehensive installation, environment variables, build commands, and deployment guide.
 - **[LICENSE](LICENSE)**: MIT License terms and copyright notice.
