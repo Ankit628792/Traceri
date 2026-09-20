@@ -1,14 +1,18 @@
 {
-  "name": "react-example",
+  "name": "traceri",
+  "version": "1.0.1",
+  "description": "An Editorial Visualization of a Life — An interactive digital archive, editorial magazine, and empirical data archaeology.",
+  "homepage": "https://traceri.vercel.app",
+  "author": "Ankit",
+  "license": "MIT",
   "private": true,
-  "version": "0.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite --port=3000 --host=0.0.0.0",
-    "generate:seo": "node scripts/generate-seo.js",
     "build": "node scripts/generate-seo.js && vite build && cp dist/index.html dist/404.html",
+    "generate:seo": "node scripts/generate-seo.js",
     "preview": "vite preview",
-    "clean": "rm -rf dist server.js",
+    "clean": "rm -rf dist",
     "lint": "tsc --noEmit"
   },
   "dependencies": {
