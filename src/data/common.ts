@@ -20,10 +20,19 @@ export interface RouteMeta {
   description: string;
 }
 
+function resolveAppUrl(): string {
+  const envUrl = typeof import.meta !== 'undefined' ? (import.meta.env?.VITE_APP_URL || import.meta.env?.APP_URL) : '';
+  let url = (typeof envUrl === 'string' && envUrl.trim()) ? envUrl.trim() : 'https://traceri.vercel.app';
+  if (!/^https?:\/\//i.test(url)) {
+    url = `https://${url}`;
+  }
+  return url.replace(/\/$/, '');
+}
+
 export const APP_INFO = {
   name: 'TRACERI',
   displayName: 'Traceri',
-  appUrl: (typeof import.meta !== 'undefined' && import.meta.env?.VITE_APP_URL) || 'https://traceri.vercel.app',
+  appUrl: resolveAppUrl(),
   letters: ['T', 'R', 'A', 'C', 'E', 'R', 'I'] as const,
   subtitle: 'DIGITAL LIFE ARCHIVE',
   tagline: 'Every moment leaves a trace.',

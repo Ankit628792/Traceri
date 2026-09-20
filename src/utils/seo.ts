@@ -65,9 +65,16 @@ export function updateRouteSEO(options: DynamicSEOOptions = {}) {
   const currentPath = options.path || window.location.pathname || '/';
   const routeMeta = ROUTE_METADATA[currentPath] || ROUTE_METADATA['/'];
 
-  // Base Host URL resolution (prefer APP_INFO.appUrl, fallback to current origin)
-  const baseUrl = APP_INFO.appUrl.replace(/\/$/, '');
-  const canonicalUrl = `${baseUrl}${currentPath === '/' ? '' : currentPath}`;
+  // Base Host URL resolution (strictly ensure absolute protocol https://)
+  let baseUrl = (APP_INFO.appUrl || 'https://traceri.vercel.app').trim();
+  if (!/^https?:\/\//i.test(baseUrl)) {
+    baseUrl = `https://${baseUrl}`;
+  }
+  baseUrl = baseUrl.replace(/\/$/, '');
+
+  // Ensure canonical URL is always a valid absolute URL (e.g. https://traceri.vercel.app/ or https://traceri.vercel.app/threads)
+  const normalizedPath = currentPath.startsWith('/') ? currentPath : `/${currentPath}`;
+  const canonicalUrl = normalizedPath === '/' ? `${baseUrl}/` : `${baseUrl}${normalizedPath}`;
   const socialImageUrl = options.image || `${baseUrl}/logo.svg`;
 
   // Dynamic Title & Description

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { useNavigate } from '@tanstack/react-router';
 import { motion } from 'motion/react';
 import { useArchive } from '../context/ArchiveContext';
@@ -11,10 +11,18 @@ export const ArchivePage: React.FC = () => {
   const { archive, selectedReceipt, selectReceipt } = useArchive();
   const navigate = useNavigate();
 
-  const handleExploreArchive = () => {
+  const handleExploreArchive = useCallback(() => {
     const el = document.getElementById('editorial-bento-grid-section') || document.getElementById('archive-catalog-section');
     el?.scrollIntoView({ behavior: 'smooth' });
-  };
+  }, []);
+
+  const handleFollowThreads = useCallback(() => {
+    navigate({ to: '/threads' });
+  }, [navigate]);
+
+  const handleEnterStory = useCallback(() => {
+    navigate({ to: '/story' });
+  }, [navigate]);
 
   return (
     <EditorialPageTransition
@@ -29,8 +37,8 @@ export const ArchivePage: React.FC = () => {
         <Hero
           archive={archive}
           onExploreArchive={handleExploreArchive}
-          onFollowThreads={() => navigate({ to: '/threads' })}
-          onEnterStory={() => navigate({ to: '/story' })}
+          onFollowThreads={handleFollowThreads}
+          onEnterStory={handleEnterStory}
         />
       </motion.div>
 
@@ -39,7 +47,7 @@ export const ArchivePage: React.FC = () => {
         <EditorialBentoGrid
           archive={archive}
           onSelectReceipt={selectReceipt}
-          onExploreThreads={() => navigate({ to: '/threads' })}
+          onExploreThreads={handleFollowThreads}
         />
       </motion.div>
 

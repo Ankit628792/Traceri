@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { motion } from 'motion/react';
 import { ProcessedArchive, LifeReceipt } from '../types';
 import {
@@ -38,21 +38,30 @@ const bentoCellVariants = {
   }),
 };
 
-export const EditorialBentoGrid: React.FC<EditorialBentoGridProps> = ({
+export const EditorialBentoGrid: React.FC<EditorialBentoGridProps> = React.memo(({
   archive,
   onSelectReceipt,
 }) => {
-  // Find interesting receipts from archive to feature in bento cells
-  const noteReceipt = archive.receipts.find((r) => r.type === 'notes') || archive.receipts[0];
-  const musicReceipt = archive.receipts.find((r) => r.type === 'music');
-  const movieReceipt = archive.receipts.find((r) => r.type === 'movies');
-  const purchaseReceipt = archive.receipts.find(
-    (r) => r.type === 'purchases' && (r.title.toLowerCase().includes('coffee') || r.title.toLowerCase().includes('roast') || r.title.toLowerCase().includes('cafe'))
-  ) || archive.receipts.find((r) => r.type === 'purchases');
-  const searchReceipt = archive.receipts.find((r) => r.type === 'searches');
+  // Find interesting receipts from archive to feature in bento cells (memoized)
+  const { noteReceipt, musicReceipt, movieReceipt, purchaseReceipt, searchReceipt, featuredThread } = useMemo(() => {
+    const note = archive.receipts.find((r) => r.type === 'notes') || archive.receipts[0];
+    const music = archive.receipts.find((r) => r.type === 'music');
+    const movie = archive.receipts.find((r) => r.type === 'movies');
+    const purchase = archive.receipts.find(
+      (r) => r.type === 'purchases' && (r.title.toLowerCase().includes('coffee') || r.title.toLowerCase().includes('roast') || r.title.toLowerCase().includes('cafe'))
+    ) || archive.receipts.find((r) => r.type === 'purchases');
+    const search = archive.receipts.find((r) => r.type === 'searches');
+    const thread = archive.threads[0];
 
-  // Key thread
-  const featuredThread = archive.threads[0];
+    return {
+      noteReceipt: note,
+      musicReceipt: music,
+      movieReceipt: movie,
+      purchaseReceipt: purchase,
+      searchReceipt: search,
+      featuredThread: thread,
+    };
+  }, [archive]);
 
   return (
     <section
@@ -582,4 +591,4 @@ export const EditorialBentoGrid: React.FC<EditorialBentoGridProps> = ({
 
     </section>
   );
-};
+});

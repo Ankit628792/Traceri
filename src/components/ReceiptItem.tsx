@@ -25,7 +25,7 @@ interface ReceiptItemProps {
   index?: number;
 }
 
-export const ReceiptItem: React.FC<ReceiptItemProps> = ({
+export const ReceiptItem: React.FC<ReceiptItemProps> = React.memo(({
   receipt,
   isSelected,
   isDimmed,
@@ -456,4 +456,4 @@ export const ReceiptItem: React.FC<ReceiptItemProps> = ({
       </div>
     </motion.div>
   );
-};
+});

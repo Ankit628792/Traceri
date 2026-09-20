@@ -34,7 +34,7 @@ const heroItemVariants = {
   },
 };
 
-export const Hero: React.FC<HeroProps> = ({
+export const Hero: React.FC<HeroProps> = React.memo(({
   archive,
   onExploreArchive,
   onFollowThreads,
@@ -49,6 +49,7 @@ export const Hero: React.FC<HeroProps> = ({
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
+    let isVisible = true;
     let animationFrameId: number;
     let width = (canvas.width = canvas.parentElement?.clientWidth || window.innerWidth);
     let height = (canvas.height = canvas.parentElement?.clientHeight || 560);
@@ -59,6 +60,25 @@ export const Hero: React.FC<HeroProps> = ({
       height = canvas.height = canvas.parentElement?.clientHeight || 560;
     };
     window.addEventListener('resize', handleResize);
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const entry = entries[0];
+        const wasVisible = isVisible;
+        isVisible = entry.isIntersecting;
+        if (isVisible && !wasVisible) {
+          cancelAnimationFrame(animationFrameId);
+          animationFrameId = requestAnimationFrame(render);
+        } else if (!isVisible) {
+          cancelAnimationFrame(animationFrameId);
+        }
+      },
+      { threshold: 0.05 }
+    );
+
+    if (canvas.parentElement) {
+      observer.observe(canvas.parentElement);
+    }
 
     // Initialize particles mapped to real receipts
     const particles = archive.receipts.slice(0, 32).map((r) => {
@@ -122,12 +142,15 @@ export const Hero: React.FC<HeroProps> = ({
       });
 
       ctx.globalAlpha = 1.0;
-      animationFrameId = requestAnimationFrame(render);
+      if (isVisible) {
+        animationFrameId = requestAnimationFrame(render);
+      }
     };
 
     render();
 
     return () => {
+      observer.disconnect();
       window.removeEventListener('resize', handleResize);
       cancelAnimationFrame(animationFrameId);
     };
@@ -249,4 +272,4 @@ export const Hero: React.FC<HeroProps> = ({
       </motion.div>
     </div>
   );
-};
+});

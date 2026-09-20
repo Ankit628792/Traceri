@@ -2,9 +2,13 @@ import React, { useState } from 'react';
 import { motion } from 'motion/react';
 import { useArchive } from '../context/ArchiveContext';
 import { LifeMap } from '../components/LifeMap';
-import { ThreeMemoryUniverse } from '../components/ThreeMemoryUniverse';
 import { EditorialPageTransition, editorialItemVariants } from '../components/EditorialPageTransition';
 import { MapPin, Boxes, Compass } from 'lucide-react';
+
+// Lazy-load Three.js 3D Universe to prevent heavy WebGL/Three bundle overhead on initial atlas load
+const ThreeMemoryUniverse = React.lazy(() =>
+  import('../components/ThreeMemoryUniverse').then((m) => ({ default: m.ThreeMemoryUniverse }))
+);
 
 export const AtlasPage: React.FC = () => {
   const { archive, selectReceipt } = useArchive();
@@ -69,7 +73,18 @@ export const AtlasPage: React.FC = () => {
         {atlasMode === 'map' ? (
           <LifeMap archive={archive} onSelectReceipt={selectReceipt} />
         ) : (
-          <ThreeMemoryUniverse archive={archive} onSelectReceipt={selectReceipt} />
+          <React.Suspense
+            fallback={
+              <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 flex flex-col items-center justify-center text-center space-y-4">
+                <div className="w-8 h-8 border-2 border-[#A795DC] border-t-transparent rounded-full animate-spin" />
+                <div className="font-mono text-xs text-[#A795DC] uppercase tracking-widest">
+                  INITIALIZING 3D MEMORY UNIVERSE SHADERS...
+                </div>
+              </div>
+            }
+          >
+            <ThreeMemoryUniverse archive={archive} onSelectReceipt={selectReceipt} />
+          </React.Suspense>
         )}
       </motion.div>
     </EditorialPageTransition>

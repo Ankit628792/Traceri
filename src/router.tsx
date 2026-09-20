@@ -1,9 +1,10 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, Suspense } from 'react';
 import {
   createRootRoute,
   createRoute,
   createRouter,
   createBrowserHistory,
+  lazyRouteComponent,
   Outlet,
   Navigate,
   useRouterState,
@@ -11,15 +12,6 @@ import {
 } from '@tanstack/react-router';
 import { motion, AnimatePresence } from 'motion/react';
 import { Navigation } from './components/Navigation';
-import { ArchivePage } from './pages/ArchivePage';
-import { StoryPage } from './pages/StoryPage';
-import { ThreadsPage } from './pages/ThreadsPage';
-import { AtlasPage } from './pages/AtlasPage';
-import { DiscoveriesPage } from './pages/DiscoveriesPage';
-import { CalendarPage } from './pages/CalendarPage';
-import { NotFoundPage } from './pages/NotFoundPage';
-import { ReceiptDetail } from './components/ReceiptDetail';
-import { DatasetModal } from './components/DatasetModal';
 import { CustomCursor } from './components/CustomCursor';
 import { ReadingProgress } from './components/ReadingProgress';
 import { ScrollToTop } from './components/ScrollToTop';
@@ -27,6 +19,23 @@ import { Footer } from './components/Footer';
 import { EditorialPageLoader } from './components/EditorialPageLoader';
 import { useArchive } from './context/ArchiveContext';
 import { updateRouteSEO } from './utils/seo';
+
+// Lazy-loaded routes for code splitting and lightweight initial bundle
+const ArchivePage = lazyRouteComponent(() => import('./pages/ArchivePage'), 'ArchivePage');
+const StoryPage = lazyRouteComponent(() => import('./pages/StoryPage'), 'StoryPage');
+const ThreadsPage = lazyRouteComponent(() => import('./pages/ThreadsPage'), 'ThreadsPage');
+const AtlasPage = lazyRouteComponent(() => import('./pages/AtlasPage'), 'AtlasPage');
+const DiscoveriesPage = lazyRouteComponent(() => import('./pages/DiscoveriesPage'), 'DiscoveriesPage');
+const CalendarPage = lazyRouteComponent(() => import('./pages/CalendarPage'), 'CalendarPage');
+const NotFoundPage = lazyRouteComponent(() => import('./pages/NotFoundPage'), 'NotFoundPage');
+
+// Lazy-loaded heavy drawer and modal components
+const ReceiptDetail = React.lazy(() =>
+  import('./components/ReceiptDetail').then((m) => ({ default: m.ReceiptDetail }))
+);
+const DatasetModal = React.lazy(() =>
+  import('./components/DatasetModal').then((m) => ({ default: m.DatasetModal }))
+);
 
 // Root Layout Component
 const RootLayout: React.FC = () => {
@@ -116,7 +125,7 @@ const RootLayout: React.FC = () => {
 
       {/* Sliding Receipt Detail Drawer */}
       {selectedReceipt && (
-        <>
+        <Suspense fallback={null}>
           <div
             className="fixed inset-0 z-40 bg-black/60 backdrop-blur-sm"
             onClick={() => setSelectedReceipt(null)}
@@ -136,19 +145,21 @@ const RootLayout: React.FC = () => {
               setSelectedReceipt(null);
             }}
           />
-        </>
+        </Suspense>
       )}
 
       {/* Dataset Ingestion Modal */}
       {showDatasetModal && (
-        <DatasetModal
-          archive={archive}
-          onClose={() => setShowDatasetModal(false)}
-          onLoadNewData={(newData) => {
-            setRawDataset(newData);
-            setSelectedReceipt(null);
-          }}
-        />
+        <Suspense fallback={null}>
+          <DatasetModal
+            archive={archive}
+            onClose={() => setShowDatasetModal(false)}
+            onLoadNewData={(newData) => {
+              setRawDataset(newData);
+              setSelectedReceipt(null);
+            }}
+          />
+        </Suspense>
       )}
 
       {/* Detailed Editorial Footer */}

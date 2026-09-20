@@ -52,6 +52,7 @@ const CursorContent: React.FC = () => {
   // Ref tracking to avoid thrashing useEffect event listeners
   const isVisibleRef = useRef(false);
   const isHoveredRef = useRef(false);
+  const hoverLabelRef = useRef('');
 
   useEffect(() => {
     isVisibleRef.current = isVisible;
@@ -60,6 +61,10 @@ const CursorContent: React.FC = () => {
   useEffect(() => {
     isHoveredRef.current = isHovered;
   }, [isHovered]);
+
+  useEffect(() => {
+    hoverLabelRef.current = hoverLabel;
+  }, [hoverLabel]);
 
   useEffect(() => {
     // Check if touch device / pointer fine
@@ -84,20 +89,31 @@ const CursorContent: React.FC = () => {
           'button, a, input, select, textarea, [role="button"], [data-cursor], .receipt-card'
         );
         if (interactiveEl) {
-          setIsHovered(true);
-          isHoveredRef.current = true;
+          let newLabel = '';
           const customLabel = interactiveEl.getAttribute('data-cursor-label');
           if (customLabel) {
-            setHoverLabel(customLabel);
+            newLabel = customLabel;
           } else if (interactiveEl.closest('.receipt-card')) {
-            setHoverLabel('INSPECT');
-          } else if (interactiveEl.tagName === 'A' || interactiveEl.tagName === 'BUTTON') {
-            setHoverLabel('');
+            newLabel = 'INSPECT';
+          }
+
+          if (!isHoveredRef.current) {
+            setIsHovered(true);
+            isHoveredRef.current = true;
+          }
+          if (hoverLabelRef.current !== newLabel) {
+            setHoverLabel(newLabel);
+            hoverLabelRef.current = newLabel;
           }
         } else {
-          setIsHovered(false);
-          isHoveredRef.current = false;
-          setHoverLabel('');
+          if (isHoveredRef.current) {
+            setIsHovered(false);
+            isHoveredRef.current = false;
+          }
+          if (hoverLabelRef.current !== '') {
+            setHoverLabel('');
+            hoverLabelRef.current = '';
+          }
         }
       }
     };

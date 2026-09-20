@@ -23,7 +23,7 @@ interface ArchiveVisualizationsProps {
 
 type VisualizationTab = 'frequency' | 'spend' | 'temporal' | 'overview';
 
-export const ArchiveVisualizations: React.FC<ArchiveVisualizationsProps> = ({ archive }) => {
+export const ArchiveVisualizations: React.FC<ArchiveVisualizationsProps> = React.memo(({ archive }) => {
   const [activeTab, setActiveTab] = useState<VisualizationTab>('overview');
 
   // 1. Category Frequency & Distribution
@@ -552,4 +552,4 @@ export const ArchiveVisualizations: React.FC<ArchiveVisualizationsProps> = ({ ar
       </div>
     </section>
   );
-};
+});

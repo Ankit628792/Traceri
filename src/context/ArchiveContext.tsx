@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useMemo } from 'react';
+import React, { createContext, useContext, useState, useMemo, useCallback } from 'react';
 import { LifeReceipt, ProcessedArchive } from '../types';
 import { SAMPLE_DATASET } from '../data/sampleDataset';
 import { processArchiveData } from '../utils/engine';
@@ -26,23 +26,26 @@ export const ArchiveProvider: React.FC<{ children: React.ReactNode }> = ({ child
     return processArchiveData(rawDataset);
   }, [rawDataset]);
 
-  const selectReceipt = (receipt: LifeReceipt) => {
+  const selectReceipt = useCallback((receipt: LifeReceipt) => {
     setSelectedReceipt(receipt);
-  };
+  }, []);
+
+  const contextValue = useMemo(
+    () => ({
+      rawDataset,
+      setRawDataset,
+      archive,
+      selectedReceipt,
+      setSelectedReceipt,
+      selectReceipt,
+      showDatasetModal,
+      setShowDatasetModal,
+    }),
+    [rawDataset, archive, selectedReceipt, selectReceipt, showDatasetModal]
+  );
 
   return (
-    <ArchiveContext.Provider
-      value={{
-        rawDataset,
-        setRawDataset,
-        archive,
-        selectedReceipt,
-        setSelectedReceipt,
-        selectReceipt,
-        showDatasetModal,
-        setShowDatasetModal,
-      }}
-    >
+    <ArchiveContext.Provider value={contextValue}>
       {children}
     </ArchiveContext.Provider>
   );

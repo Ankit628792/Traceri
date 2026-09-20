@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useCallback } from 'react';
 import { ProcessedArchive, LifeReceipt, TraceCategory } from '../types';
 import { CATEGORIES, CATEGORY_META } from '../utils/engine';
 import { ReceiptItem } from './ReceiptItem';
@@ -12,7 +12,7 @@ interface ArchiveViewProps {
   onSelectReceipt: (receipt: LifeReceipt) => void;
 }
 
-export const ArchiveView: React.FC<ArchiveViewProps> = ({
+export const ArchiveView: React.FC<ArchiveViewProps> = React.memo(({
   archive,
   selectedReceipt,
   onSelectReceipt,
@@ -22,6 +22,10 @@ export const ArchiveView: React.FC<ArchiveViewProps> = ({
   const [hoveredReceipt, setHoveredReceipt] = useState<LifeReceipt | null>(null);
   const [selectedMonth, setSelectedMonth] = useState<string | 'ALL'>('ALL');
   const [showVisualizations, setShowVisualizations] = useState<boolean>(true);
+
+  const handleHoverReceipt = useCallback((receipt: LifeReceipt | null) => {
+    setHoveredReceipt(receipt);
+  }, []);
 
   // Count traces by category
   const categoryCounts = useMemo(() => {
@@ -308,7 +312,7 @@ export const ArchiveView: React.FC<ArchiveViewProps> = ({
               isDimmed={isDimmed}
               isConnected={isConnected}
               onSelect={onSelectReceipt}
-              onHover={setHoveredReceipt}
+              onHover={handleHoverReceipt}
             />
           );
         })}
@@ -322,4 +326,4 @@ export const ArchiveView: React.FC<ArchiveViewProps> = ({
 
     </div>
   );
-};
+});

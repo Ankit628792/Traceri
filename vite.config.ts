@@ -8,9 +8,37 @@ export default defineConfig(() => {
     plugins: [react(), tailwindcss()],
     resolve: {
       alias: {
-        '@': path.resolve(__dirname, '.'),
+        '@': path.resolve(import.meta.dirname ?? '.', '.'),
       },
       dedupe: ['react', 'react-dom'],
+    },
+    build: {
+      chunkSizeWarningLimit: 600,
+      rollupOptions: {
+        output: {
+          manualChunks(id) {
+            if (id.includes('node_modules/three')) {
+              return 'vendor-three';
+            }
+            if (
+              id.includes('node_modules/recharts') ||
+              id.includes('node_modules/d3') ||
+              id.includes('node_modules/victory-vendor')
+            ) {
+              return 'vendor-charts';
+            }
+            if (id.includes('node_modules/lucide-react')) {
+              return 'vendor-icons';
+            }
+            if (id.includes('node_modules/motion')) {
+              return 'vendor-motion';
+            }
+            if (id.includes('node_modules/@tanstack/react-router')) {
+              return 'vendor-router';
+            }
+          },
+        },
+      },
     },
     optimizeDeps: {
       include: [

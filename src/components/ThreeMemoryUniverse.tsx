@@ -16,6 +16,11 @@ export const ThreeMemoryUniverse: React.FC<ThreeMemoryUniverseProps> = ({
   const containerRef = useRef<HTMLDivElement | null>(null);
   const [hoveredReceipt, setHoveredReceipt] = useState<LifeReceipt | null>(null);
   const [use2DFallback, setUse2DFallback] = useState<boolean>(false);
+  const onSelectReceiptRef = useRef(onSelectReceipt);
+
+  useEffect(() => {
+    onSelectReceiptRef.current = onSelectReceipt;
+  }, [onSelectReceipt]);
 
   useEffect(() => {
     const container = containerRef.current;
@@ -143,7 +148,7 @@ export const ThreeMemoryUniverse: React.FC<ThreeMemoryUniverseProps> = ({
       if (intersects.length > 0) {
         const hit = receiptObjects.find((o) => o.mesh === intersects[0].object);
         if (hit) {
-          onSelectReceipt(hit.receipt);
+          onSelectReceiptRef.current(hit.receipt);
         }
       }
     };
@@ -179,9 +184,28 @@ export const ThreeMemoryUniverse: React.FC<ThreeMemoryUniverseProps> = ({
     window.addEventListener('mouseup', onMouseUp);
     window.addEventListener('mousemove', onDragMove);
 
-    // Animation Loop
+    // Animation Loop with Visibility Observation
+    let isVisible = true;
     let animationFrameId: number;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const entry = entries[0];
+        const wasVisible = isVisible;
+        isVisible = entry.isIntersecting;
+        if (isVisible && !wasVisible) {
+          cancelAnimationFrame(animationFrameId);
+          animationFrameId = requestAnimationFrame(animate);
+        } else if (!isVisible) {
+          cancelAnimationFrame(animationFrameId);
+        }
+      },
+      { threshold: 0.05 }
+    );
+    observer.observe(container);
+
     const animate = () => {
+      if (!isVisible) return;
       animationFrameId = requestAnimationFrame(animate);
 
       if (!isDragging) {
@@ -219,6 +243,7 @@ export const ThreeMemoryUniverse: React.FC<ThreeMemoryUniverseProps> = ({
     window.addEventListener('resize', handleResize);
 
     return () => {
+      observer.disconnect();
       cancelAnimationFrame(animationFrameId);
       window.removeEventListener('resize', handleResize);
       renderer.domElement.removeEventListener('mousemove', onMouseMove);
@@ -228,7 +253,7 @@ export const ThreeMemoryUniverse: React.FC<ThreeMemoryUniverseProps> = ({
       window.removeEventListener('mousemove', onDragMove);
       renderer.dispose();
     };
-  }, [archive, use2DFallback, onSelectReceipt]);
+  }, [archive, use2DFallback]);
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">

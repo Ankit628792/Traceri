@@ -17,7 +17,11 @@ const publicDir = path.join(rootDir, 'public');
 // Resolve Target App URL from CLI argument, environment, or default to https://traceri.vercel.app
 const cliArg = process.argv[2];
 const envUrl = process.env.APP_URL || process.env.VITE_APP_URL;
-const APP_URL = (cliArg || (envUrl && !envUrl.includes('run.app') ? envUrl : 'https://traceri.vercel.app')).replace(/\/$/, '');
+let rawUrl = (cliArg || (envUrl && !envUrl.includes('run.app') ? envUrl : 'https://traceri.vercel.app')).trim();
+if (!/^https?:\/\//i.test(rawUrl)) {
+  rawUrl = `https://${rawUrl}`;
+}
+const APP_URL = rawUrl.replace(/\/$/, '');
 
 const ROUTES = [
   {
@@ -68,7 +72,7 @@ function ensureDir(dir) {
  * Generate robots.txt
  */
 function generateRobotsTxt() {
-  const content = `# Robots.txt for Traceri (Traceva) Digital Life Archive
+  const content = `# Robots.txt for Traceri Digital Life Archive
 # Generated automatically by scripts/generate-seo.js
 # Canonical Base: ${APP_URL}
 
@@ -81,7 +85,6 @@ Disallow: /draft/
 
 # Sitemaps
 Sitemap: ${APP_URL}/sitemap.xml
-Host: ${APP_URL}
 `;
 
   const outputPath = path.join(publicDir, 'robots.txt');
@@ -96,7 +99,7 @@ function generateSitemapXml() {
   const currentDate = new Date().toISOString().split('T')[0];
 
   const urlsXml = ROUTES.map((route) => {
-    const loc = `${APP_URL}${route.path === '/' ? '' : route.path}`;
+    const loc = route.path === '/' ? `${APP_URL}/` : `${APP_URL}${route.path}`;
     return `  <url>
     <loc>${loc}</loc>
     <lastmod>${currentDate}</lastmod>
