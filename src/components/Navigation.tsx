@@ -8,7 +8,8 @@ import {
   ChevronDown,
   GitFork,
   Compass,
-  Sparkles
+  Sparkles,
+  Calendar
 } from 'lucide-react';
 import { TraceriLogo } from './TraceriLogo';
 import { useArchive } from '../context/ArchiveContext';
@@ -25,17 +26,17 @@ export const Navigation: React.FC = () => {
   // Primary options displayed directly on navbar for tablet & desktop
   const primaryNavLinks = [
     { to: '/', label: 'Archive', exact: true },
-    { to: '/calendar', label: 'Calendar', exact: false },
+    { to: '/threads', label: 'Threads', exact: false },
     { to: '/story', label: 'Story', exact: false },
   ];
 
   // Secondary options grouped into the menu popover component
   const secondaryNavLinks = [
     { 
-      to: '/threads', 
-      label: 'Threads', 
-      description: 'Recurrent themes & sequences',
-      icon: GitFork 
+      to: '/calendar', 
+      label: 'Calendar', 
+      description: 'Chronological life matrix',
+      icon: Calendar 
     },
     { 
       to: '/atlas', 

@@ -365,7 +365,7 @@ export const StoryMode: React.FC<StoryModeProps> = ({
                           </div>
 
                           <div className="space-y-4">
-                            {evidenceReceipts.map((receipt) => (
+                            {evidenceReceipts.map((receipt, rIdx) => (
                               <div
                                 key={receipt.id}
                                 className="transform hover:scale-[1.01] transition-transform"
@@ -375,6 +375,7 @@ export const StoryMode: React.FC<StoryModeProps> = ({
                                   isSelected={activeEvidenceReceiptId === receipt.id}
                                   isConnected={false}
                                   isDimmed={false}
+                                  index={rIdx}
                                   onSelect={(r) => {
                                     setActiveEvidenceReceiptId(r.id);
                                     onSelectReceipt(r);

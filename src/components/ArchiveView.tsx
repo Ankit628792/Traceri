@@ -292,7 +292,7 @@ export const ArchiveView: React.FC<ArchiveViewProps> = ({
 
       {/* RECEIPT FIELD: Tactical Editorial Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
-        {filteredReceipts.map((receipt) => {
+        {filteredReceipts.map((receipt, idx) => {
           const isSelected = selectedReceipt?.id === receipt.id;
           const isConnected = connectedIds.has(receipt.id);
           const isDimmed = activeFocusReceipt
@@ -302,6 +302,7 @@ export const ArchiveView: React.FC<ArchiveViewProps> = ({
           return (
             <ReceiptItem
               key={receipt.id}
+              index={idx}
               receipt={receipt}
               isSelected={isSelected}
               isDimmed={isDimmed}

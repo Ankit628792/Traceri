@@ -305,6 +305,7 @@ export const MomentsThreadsView: React.FC<MomentsThreadsViewProps> = ({
                           isSelected={isCurrent}
                           isConnected={false}
                           isDimmed={false}
+                          index={idx}
                           onSelect={() => {
                             setCurrentStepIndex(idx);
                             onSelectReceipt(receipt);

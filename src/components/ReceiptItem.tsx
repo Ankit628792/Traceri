@@ -1,4 +1,5 @@
 import React from 'react';
+import { motion } from 'motion/react';
 import { LifeReceipt } from '../types';
 import { CATEGORY_META } from '../utils/engine';
 import { 
@@ -21,6 +22,7 @@ interface ReceiptItemProps {
   isConnected: boolean;
   onSelect: (receipt: LifeReceipt) => void;
   onHover?: (receipt: LifeReceipt | null) => void;
+  index?: number;
 }
 
 export const ReceiptItem: React.FC<ReceiptItemProps> = ({
@@ -30,6 +32,7 @@ export const ReceiptItem: React.FC<ReceiptItemProps> = ({
   isConnected,
   onSelect,
   onHover,
+  index = 0,
 }) => {
   const cat = CATEGORY_META[receipt.type];
   const dateStr = new Date(receipt.timestamp).toLocaleDateString('en-US', {
@@ -56,23 +59,60 @@ export const ReceiptItem: React.FC<ReceiptItemProps> = ({
     }
   };
 
+  // Stagger calculation based on index position
+  const staggerDelay = Math.min((index % 8) * 0.05, 0.4);
+
   return (
-    <div
+    <motion.div
       id={`receipt-${receipt.id}`}
       data-cursor-label={cat.label.toUpperCase()}
       onClick={() => onSelect(receipt)}
       onMouseEnter={() => onHover?.(receipt)}
       onMouseLeave={() => onHover?.(null)}
-      className={`group relative cursor-pointer select-none transition-all duration-150 ease-out ${
+      initial={{
+        opacity: 0,
+        rotateY: -26,
+        rotateX: 12,
+        rotateZ: -2,
+        y: 28,
+        scale: 0.93,
+        transformOrigin: 'left center',
+      }}
+      whileInView={{
+        opacity: isDimmed ? 0.25 : 1,
+        rotateY: 0,
+        rotateX: 0,
+        rotateZ: 0,
+        y: 0,
+        scale: 1,
+      }}
+      whileHover={{
+        rotateY: 5,
+        rotateX: -3,
+        y: -6,
+        scale: 1.02,
+        transition: { duration: 0.2, ease: 'easeOut' },
+      }}
+      viewport={{ once: true, amount: 0.12 }}
+      transition={{
+        duration: 0.52,
+        ease: [0.16, 1, 0.3, 1] as const,
+        delay: staggerDelay,
+      }}
+      style={{
+        perspective: 1000,
+        transformStyle: 'preserve-3d',
+      }}
+      className={`group relative cursor-pointer select-none transition-all duration-200 ease-out ${
         isDimmed
           ? 'opacity-25'
-          : 'opacity-100 hover:-translate-y-0.5'
+          : 'opacity-100'
       } ${
         isSelected
-          ? 'ring-1 ring-[#CFA04E] shadow-lg z-20'
+          ? 'ring-1 ring-[#CFA04E] shadow-xl z-20'
           : isConnected
           ? 'ring-1 ring-[#569CA6]/80 shadow-md z-10'
-          : 'shadow-sm hover:shadow-md'
+          : 'shadow-sm hover:shadow-lg'
       }`}
     >
       {/* Category Pip & ID Indicator */}
@@ -414,6 +454,6 @@ export const ReceiptItem: React.FC<ReceiptItemProps> = ({
         <span>{dateStr}</span>
         <span>{timeStr}</span>
       </div>
-    </div>
+    </motion.div>
   );
 };

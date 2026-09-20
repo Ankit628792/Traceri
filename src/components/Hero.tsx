@@ -1,4 +1,5 @@
 import React, { useEffect, useRef } from 'react';
+import { motion } from 'motion/react';
 import { ProcessedArchive } from '../types';
 import { ArrowDown, Compass, Sparkles } from 'lucide-react';
 import { CATEGORY_META } from '../utils/engine';
@@ -9,6 +10,29 @@ interface HeroProps {
   onFollowThreads: () => void;
   onEnterStory: () => void;
 }
+
+const heroContainerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.12,
+      delayChildren: 0.1,
+    },
+  },
+};
+
+const heroItemVariants = {
+  hidden: { opacity: 0, y: 24 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.6,
+      ease: [0.16, 1, 0.3, 1] as const,
+    },
+  },
+};
 
 export const Hero: React.FC<HeroProps> = ({
   archive,
@@ -117,10 +141,15 @@ export const Hero: React.FC<HeroProps> = ({
         className="absolute inset-0 pointer-events-none w-full h-full opacity-60"
       />
 
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24 flex flex-col justify-between min-h-[500px]">
+      <motion.div
+        variants={heroContainerVariants}
+        initial="hidden"
+        animate="visible"
+        className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24 flex flex-col justify-between min-h-[500px]"
+      >
         
         {/* Top Header metadata */}
-        <div className="flex flex-wrap items-center justify-between gap-4 text-xs font-mono text-[#8E939E] border-b border-[#232730]/60 pb-4">
+        <motion.div variants={heroItemVariants} className="flex flex-wrap items-center justify-between gap-4 text-xs font-mono text-[#8E939E] border-b border-[#232730]/60 pb-4">
           <div className="flex items-center space-x-3">
             <span className="text-[#CFA04E] font-semibold">VOLUME 01</span>
             <span>/</span>
@@ -131,29 +160,29 @@ export const Hero: React.FC<HeroProps> = ({
             <span className="hidden sm:inline">·</span>
             <span className="hidden sm:inline text-[#FAF8F5]">ZERO FABRICATIONS</span>
           </div>
-        </div>
+        </motion.div>
 
         {/* Hero Title & Statements */}
         <div className="my-8 sm:my-12">
-          <div className="inline-block mb-3 font-mono text-[11px] tracking-[0.3em] uppercase text-[#8E939E]">
+          <motion.div variants={heroItemVariants} className="inline-block mb-3 font-mono text-[11px] tracking-[0.3em] uppercase text-[#8E939E]">
             YOUR DIGITAL LIFE, VISUALIZED
-          </div>
+          </motion.div>
 
-          <h1 className="font-editorial text-6xl sm:text-8xl lg:text-9xl font-light tracking-tight text-[#FAF8F5] leading-none mb-4">
+          <motion.h1 variants={heroItemVariants} className="font-editorial text-6xl sm:text-8xl lg:text-9xl font-light tracking-tight text-[#FAF8F5] leading-none mb-4">
             TRACERI
-          </h1>
+          </motion.h1>
 
-          <p className="font-editorial text-xl sm:text-3xl text-[#FAF8F5]/90 tracking-wide max-w-3xl italic">
+          <motion.p variants={heroItemVariants} className="font-editorial text-xl sm:text-3xl text-[#FAF8F5]/90 tracking-wide max-w-3xl italic">
             Every moment leaves a trace.
-          </p>
+          </motion.p>
 
-          <p className="mt-4 text-sm font-sans text-[#8E939E] max-w-2xl leading-relaxed">
+          <motion.p variants={heroItemVariants} className="mt-4 text-sm font-sans text-[#8E939E] max-w-2xl leading-relaxed">
             Raw digital events assembled into interconnected memories. Receipts, searches, tickets,
             and coordinates reveal the invisible architecture of your life.
-          </p>
+          </motion.p>
 
           {/* Quick Stats Ribbon with Rich Editorial Chromatic Tags */}
-          <div className="mt-8 flex flex-wrap gap-3 sm:gap-4 text-xs font-mono">
+          <motion.div variants={heroItemVariants} className="mt-8 flex flex-wrap gap-3 sm:gap-4 text-xs font-mono">
             <div className="px-3.5 py-1.5 rounded-lg bg-[#141722]/80 border border-[#E5A93C]/40 flex items-center space-x-2 shadow-[0_0_15px_rgba(229,169,60,0.1)]">
               <span className="w-1.5 h-1.5 rounded-full bg-[#E5A93C]" />
               <span className="text-[#FAF8F5] font-semibold">{archive.totalTraces}</span>
@@ -179,11 +208,11 @@ export const Hero: React.FC<HeroProps> = ({
               <span className="text-[#67E8F9] font-semibold">{archive.connections.length}</span>
               <span className="text-[#22D3EE]">CONNECTIONS</span>
             </div>
-          </div>
+          </motion.div>
         </div>
 
         {/* Hero Actions Bar */}
-        <div className="pt-6 border-t border-[#232730]/60 flex flex-wrap items-center justify-between gap-4">
+        <motion.div variants={heroItemVariants} className="pt-6 border-t border-[#232730]/60 flex flex-wrap items-center justify-between gap-4">
           <div className="flex flex-wrap items-center gap-3">
             <button
               id="hero-explore-archive-btn"
@@ -215,9 +244,9 @@ export const Hero: React.FC<HeroProps> = ({
               <span>ENTER STORY</span>
             </button>
           </div>
-        </div>
+        </motion.div>
 
-      </div>
+      </motion.div>
     </div>
   );
 };

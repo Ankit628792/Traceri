@@ -50,7 +50,6 @@ export const editorialItemVariants: Variants = {
 
 export const EditorialPageTransition: React.FC<EditorialPageTransitionProps> = ({
   children,
-  folio,
   className = '',
 }) => {
   return (
@@ -60,27 +59,6 @@ export const EditorialPageTransition: React.FC<EditorialPageTransitionProps> = (
       animate="visible"
       className={`w-full ${className}`}
     >
-      {/* Editorial Folio Tag (Magazine header line) if provided */}
-      {folio && (
-        <motion.div
-          variants={editorialItemVariants}
-          className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-4 pb-2 flex items-center justify-between text-[10px] font-mono text-[#8E939E] border-b border-[#232730]/60 mb-4 select-none"
-        >
-          <div className="flex items-center space-x-3">
-            <span className="text-[#CFA04E] font-semibold tracking-wider">
-              {folio.volume || 'VOL. 01'}
-            </span>
-            <span>·</span>
-            <span className="uppercase tracking-widest text-[#FAF8F5]">
-              {folio.section || 'ARCHIVE'}
-            </span>
-          </div>
-          <div className="flex items-center space-x-4 tracking-wider">
-            <span>{folio.edition || 'DIGITAL TRACES EDITION'}</span>
-          </div>
-        </motion.div>
-      )}
-
       {children}
     </motion.div>
   );

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   createRootRoute,
   createRoute,
@@ -8,7 +8,7 @@ import {
   Navigate,
   useRouterState,
 } from '@tanstack/react-router';
-import { motion } from 'motion/react';
+import { motion, AnimatePresence } from 'motion/react';
 import { Navigation } from './components/Navigation';
 import { ArchivePage } from './pages/ArchivePage';
 import { StoryPage } from './pages/StoryPage';
@@ -22,6 +22,7 @@ import { CustomCursor } from './components/CustomCursor';
 import { ReadingProgress } from './components/ReadingProgress';
 import { ScrollToTop } from './components/ScrollToTop';
 import { Footer } from './components/Footer';
+import { EditorialPageLoader } from './components/EditorialPageLoader';
 import { useArchive } from './context/ArchiveContext';
 
 // Root Layout Component
@@ -39,8 +40,40 @@ const RootLayout: React.FC = () => {
   const routerState = useRouterState();
   const currentPath = routerState.location.pathname;
 
+  const [isInitialLoading, setIsInitialLoading] = useState(true);
+  const [isRouteLoading, setIsRouteLoading] = useState(false);
+  const prevPathRef = useRef(currentPath);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsInitialLoading(false);
+    }, 1100);
+    return () => clearTimeout(timer);
+  }, []);
+
+  useEffect(() => {
+    if (prevPathRef.current !== currentPath) {
+      prevPathRef.current = currentPath;
+      setIsRouteLoading(true);
+      const timer = setTimeout(() => {
+        setIsRouteLoading(false);
+      }, 1100);
+      return () => clearTimeout(timer);
+    }
+  }, [currentPath]);
+
   return (
     <div className="min-h-screen bg-[#0A0B0D] text-[#E4E1DB] flex flex-col selection:bg-[#CFA04E]/30 selection:text-white relative">
+      {/* Full-Screen App Entry & Route Navigation Loader */}
+      <EditorialPageLoader
+        isLoading={isInitialLoading || isRouteLoading}
+        routePath={currentPath}
+        onComplete={() => {
+          if (isInitialLoading) setIsInitialLoading(false);
+          if (isRouteLoading) setIsRouteLoading(false);
+        }}
+      />
+
       {/* Custom Fluid Cursor with Ribbon Trail */}
       <CustomCursor />
 
@@ -52,18 +85,21 @@ const RootLayout: React.FC = () => {
 
       {/* Main Page Content Outlet with Editorial Entrance Animation */}
       <main className="flex-1 w-full relative">
-        <motion.div
-          key={currentPath}
-          initial={{ opacity: 0, y: 16, filter: 'blur(4px)' }}
-          animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-          transition={{
-            duration: 0.38,
-            ease: [0.16, 1, 0.3, 1] as const,
-          }}
-          className="w-full flex-1 flex flex-col"
-        >
-          <Outlet />
-        </motion.div>
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={currentPath}
+            initial={{ opacity: 0, y: 16, filter: 'blur(4px)' }}
+            animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+            exit={{ opacity: 0, y: -16, filter: 'blur(4px)' }}
+            transition={{
+              duration: 0.38,
+              ease: [0.16, 1, 0.3, 1] as const,
+            }}
+            className="w-full flex-1 flex flex-col"
+          >
+            <Outlet />
+          </motion.div>
+        </AnimatePresence>
       </main>
 
       {/* Floating Scroll to Top Action Button */}
